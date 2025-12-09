@@ -9,4 +9,8 @@ defmodule UniqueCounting do
     Agent.update(__MODULE__, &(&1 + 1))
     Agent.get(__MODULE__, & &1)
   end
+
+  def stop() do
+    Agent.stop(__MODULE__)
+  end
 end
