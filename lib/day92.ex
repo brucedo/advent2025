@@ -150,8 +150,14 @@ defmodule Day92 do
   end
 
   def run_part_2(red_tile_coords) do
+    Logger.debug("Reading in the filtered squares")
     filtered_squares = filter_unmakeable(red_tile_coords)
 
+    Logger.debug("filtering by border inclusion")
+
+    filtered_squares = filter_by_border(filtered_squares)
+
+    Logger.debug("Calculating area")
     max_area(filtered_squares)
   end
 
@@ -162,6 +168,60 @@ defmodule Day92 do
     |> Enum.map(fn [x_str | [y_str | []]] ->
       {String.to_integer(x_str), String.to_integer(y_str)}
     end)
+  end
+
+  def filter_by_border([]) do
+    []
+  end
+
+  def filter_by_border([{{first_x, first_y}, {second_x, second_y}} | filtered_squares]) do
+    {small_x, large_x} =
+      case first_x < second_x do
+        true -> {first_x, second_x}
+        false -> {second_x, first_x}
+      end
+
+    {small_y, large_y} =
+      case first_y < second_y do
+        true -> {first_y, second_y}
+        false -> {second_y, first_y}
+      end
+
+    case filter_along_x(large_x, small_x, small_y) && filter_along_x(large_x, small_x, large_y) &&
+           filter_along_y(large_y, small_y, small_x) && filter_along_y(large_y, small_y, large_x) do
+      true -> [{{first_x, first_y}, {second_x, second_y}} | filter_by_border(filtered_squares)]
+      false -> filter_by_border(filtered_squares)
+    end
+  end
+
+  defp filter_along_y(second_y, current_y, x) when second_y == current_y do
+    TileSegments.inside?({x, current_y})
+  end
+
+  defp filter_along_y(second_y, current_y, x) do
+    case TileSegments.inside?({x, current_y}) do
+      true ->
+        filter_along_y(second_y, current_y + 1, x)
+
+      false ->
+        # Logger.debug("At least one pair {#{x}, #{current_y}} is not inside")
+        false
+    end
+  end
+
+  defp filter_along_x(second_x, current_x, y) when second_x == current_x do
+    TileSegments.inside?({current_x, y})
+  end
+
+  defp filter_along_x(second_x, current_x, y) do
+    case TileSegments.inside?({current_x, y}) do
+      true ->
+        filter_along_x(second_x, current_x + 1, y)
+
+      false ->
+        # Logger.debug("At least one pair {#{current_x}, #{y} } is not inside")
+        false
+    end
   end
 
   def filter_unmakeable([]) do

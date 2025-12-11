@@ -241,4 +241,92 @@ defmodule Day92Test do
 
     assert Day92.run_part_2(lines) == 24
   end
+
+  @tag tile_segment: [
+         {2, 1},
+         {4, 1},
+         {4, 3},
+         {6, 3},
+         {6, 1},
+         {9, 1},
+         {9, 4},
+         {7, 4},
+         {7, 6},
+         {9, 6},
+         {9, 8},
+         {1, 8},
+         {1, 3},
+         {2, 3}
+       ]
+  test "Given the input coordinates [{9, 8}, {2,3}], filter_unmakeable will return [{{9, 8}, {2, 3}}]" do
+    inputs = [{9, 8}, {2, 3}]
+
+    assert Day92.filter_unmakeable(inputs) == [{{9, 8}, {2, 3}}]
+  end
+
+  @tag tile_segment: [
+         {2, 1},
+         {4, 1},
+         {4, 3},
+         {6, 3},
+         {6, 1},
+         {9, 1},
+         {9, 4},
+         {7, 4},
+         {7, 6},
+         {9, 6},
+         {9, 8},
+         {1, 8},
+         {1, 3},
+         {2, 3}
+       ]
+  test "Given the input coordinates [{9, 8}, {2,3}], filter_by_border will return []" do
+    inputs = [{{9, 8}, {2, 3}}]
+
+    assert Day92.filter_by_border(inputs) == []
+  end
+
+  @tag tile_segment: [
+         {2, 1},
+         {4, 1},
+         {4, 3},
+         {6, 3},
+         {6, 1},
+         {9, 1},
+         {9, 4},
+         {7, 4},
+         {7, 6},
+         {9, 6},
+         {9, 8},
+         {1, 8},
+         {1, 3},
+         {2, 3}
+       ]
+  test "Given the input coordinates [{{2,3}, {9, 1}}, filter_by_border will return []" do
+    inputs = [{{2, 3}, {9, 1}}]
+
+    assert Day92.filter_by_border(inputs) == []
+  end
+
+  @tag tile_segment: [
+         {2, 1},
+         {4, 1},
+         {4, 3},
+         {6, 3},
+         {6, 1},
+         {9, 1},
+         {9, 4},
+         {7, 4},
+         {7, 6},
+         {9, 6},
+         {9, 8},
+         {1, 8},
+         {1, 3},
+         {2, 3}
+       ]
+  test "Given the input coordinates [{2,3}, {9, 1}], filter_unmakeable will return [{{2,3}, {9,1}}]" do
+    inputs = [{2, 3}, {9, 1}]
+
+    assert Day92.filter_unmakeable(inputs) == [{{2, 3}, {9, 1}}]
+  end
 end
